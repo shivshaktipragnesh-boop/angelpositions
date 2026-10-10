@@ -5,46 +5,90 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Angel One – Glasses</title>
 <style>
-  /* Black = transparent on additive displays, so keep the background pure black and text high-contrast */
-  :root { --green:#3ddc84; --red:#ff5c5c; --amber:#ffc247; --dim:#9aa0a6; }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; background: #000; color: #fff; overflow: hidden;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; user-select: none; }
-  #app { height: 100%; max-width: 600px; max-height: 600px; margin: 0 auto; padding: 18px 22px;
-    display: flex; flex-direction: column; }
-  header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 10px; }
-  header h1 { font-size: 26px; font-weight: 700; letter-spacing: .5px; }
-  header span { font-size: 20px; color: var(--dim); }
-  main { flex: 1; display: flex; flex-direction: column; gap: 8px; overflow: hidden; }
-  footer { display: flex; justify-content: space-between; font-size: 18px; color: var(--dim); padding-top: 8px; }
-  .up { color: var(--green); } .down { color: var(--red); } .warn { color: var(--amber); } .dim { color: var(--dim); }
+  /* Pure black background (transparent on additive displays), high-contrast text, soft dark cards */
+  :root {
+    --bg:#000; --card:#0f1013; --card2:#15171c; --line:#23262d;
+    --text:#f5f6f8; --dim:#8b919c;
+    --green:#34e08a; --red:#ff5d6c; --amber:#ffc24a; --blue:#5aa9ff;
+    --green-bg:rgba(52,224,138,.14); --red-bg:rgba(255,93,108,.14); --amber-bg:rgba(255,194,74,.14); --blue-bg:rgba(90,169,255,.14);
+  }
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; background:var(--bg); color:var(--text); overflow:hidden; user-select:none;
+    font-family:"Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-font-smoothing:antialiased; }
+  #app { height:100%; max-width:600px; max-height:600px; margin:0 auto; padding:16px 20px 12px; display:flex; flex-direction:column; gap:10px; }
 
-  .big { margin: auto 0; text-align: center; }
-  .big .label { font-size: 24px; color: var(--dim); margin-bottom: 8px; }
-  .big .value { font-size: 64px; font-weight: 800; line-height: 1.1; }
-  .big .sub { font-size: 24px; margin-top: 18px; color: var(--dim); }
+  /* Header */
+  header { display:flex; align-items:center; justify-content:space-between; }
+  .brand { display:flex; align-items:center; gap:10px; font-size:24px; font-weight:800; letter-spacing:.2px; }
+  .logo { width:14px; height:14px; border-radius:50%; background:linear-gradient(135deg,var(--green),var(--blue)); box-shadow:0 0 12px rgba(52,224,138,.6); }
+  .clock { font-size:18px; font-weight:600; color:var(--dim); background:var(--card2); border:1px solid var(--line); padding:4px 12px; border-radius:999px; }
+  .clock .stale { color:var(--amber); }
 
-  .row { border-bottom: 1px solid #2a2a2a; padding: 6px 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; }
-  .row .l { min-width: 0; }
-  .row .sym { font-size: 26px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .row .meta { font-size: 19px; color: var(--dim); margin-top: 2px; }
-  .row .r { text-align: right; white-space: nowrap; }
-  .row .pnl { font-size: 26px; font-weight: 700; }
-  .row .tag { font-size: 19px; margin-top: 2px; text-transform: capitalize; }
-  .msg { margin: auto 0; text-align: center; font-size: 26px; color: var(--dim); line-height: 1.4; }
+  /* Section tabs */
+  #tabs { display:flex; gap:6px; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:4px; }
+  #tabs span { flex:1; text-align:center; font-size:18px; font-weight:700; padding:6px 0; border-radius:10px; color:var(--dim); transition:all .2s; }
+  #tabs span.on { background:var(--text); color:#000; }
+
+  /* Content */
+  main { flex:1; display:flex; flex-direction:column; gap:8px; min-height:0; animation:fade .25s ease; }
+  @keyframes fade { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
+  .up { color:var(--green); } .down { color:var(--red); } .warn { color:var(--amber); } .dim { color:var(--dim); }
+
+  /* Summary hero */
+  .hero { flex:1.5; border-radius:22px; border:1px solid var(--line); padding:18px; text-align:center;
+    display:flex; flex-direction:column; justify-content:center; background:var(--card); position:relative; overflow:hidden; }
+  .hero.up-bg { background:radial-gradient(120% 120% at 50% 0%, rgba(52,224,138,.22), var(--card) 65%); border-color:rgba(52,224,138,.35); }
+  .hero.down-bg { background:radial-gradient(120% 120% at 50% 0%, rgba(255,93,108,.22), var(--card) 65%); border-color:rgba(255,93,108,.35); }
+  .hero .label { font-size:20px; font-weight:600; color:var(--dim); letter-spacing:1.5px; text-transform:uppercase; }
+  .hero .value { font-size:60px; font-weight:800; line-height:1.15; margin-top:6px; letter-spacing:-1px; }
+  .stats { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .stat { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:10px 14px; display:flex; flex-direction:column; justify-content:center; }
+  .stat .n { font-size:36px; font-weight:800; line-height:1.1; }
+  .stat .t { font-size:18px; color:var(--dim); font-weight:600; margin-top:2px; }
+
+  /* Row cards */
+  .card { flex:1; max-height:112px; display:flex; justify-content:space-between; align-items:center; gap:12px;
+    background:linear-gradient(180deg,var(--card2),var(--card)); border:1px solid var(--line); border-radius:18px; padding:8px 14px 8px 16px; position:relative; overflow:hidden; }
+  .card::before { content:""; position:absolute; left:0; top:0; bottom:0; width:5px; background:var(--accent,var(--dim)); }
+  .card.up-c { --accent:var(--green); } .card.down-c { --accent:var(--red); } .card.warn-c { --accent:var(--amber); } .card.flat-c { --accent:var(--dim); }
+  .card .l { min-width:0; }
+  .sym { font-size:25px; font-weight:800; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; letter-spacing:.2px; }
+  .meta { display:flex; align-items:center; gap:8px; margin-top:5px; font-size:18px; color:var(--dim); white-space:nowrap; }
+  .chip { font-size:15px; font-weight:800; padding:2px 9px; border-radius:8px; letter-spacing:.5px; }
+  .chip.buy { color:var(--green); background:var(--green-bg); } .chip.sell { color:var(--red); background:var(--red-bg); } .chip.flat { color:var(--dim); background:var(--card2); }
+  .r { text-align:right; white-space:nowrap; }
+  .pnl { font-size:25px; font-weight:800; }
+  .pct { font-size:17px; font-weight:700; margin-top:2px; }
+  .pill { display:inline-block; font-size:17px; font-weight:800; text-transform:capitalize; padding:5px 12px; border-radius:999px; }
+  .pill.up { background:var(--green-bg); } .pill.down { background:var(--red-bg); } .pill.warn { background:var(--amber-bg); }
+  .msg { margin:auto 0; text-align:center; font-size:24px; color:var(--dim); line-height:1.5; padding:0 10px; }
+  .msg small { display:block; font-size:18px; margin-top:8px; }
+
+  /* Footer */
+  footer { display:flex; flex-direction:column; gap:6px; }
+  .bar { height:4px; background:var(--card2); border-radius:4px; overflow:hidden; }
+  .bar i { display:block; height:100%; width:0; background:linear-gradient(90deg,var(--green),var(--blue)); transition:width .25s; }
+  .foot { display:flex; justify-content:space-between; font-size:16px; color:var(--dim); font-weight:600; }
 </style>
 </head>
 <body>
 <div id="app">
-  <header><h1 id="title">Angel One</h1><span id="clock"></span></header>
+  <header>
+    <div class="brand"><span class="logo"></span><span id="title">Angel One</span></div>
+    <div class="clock" id="clock">--:--</div>
+  </header>
+  <div id="tabs"><span data-s="today">Today</span><span data-s="positions">Positions</span><span data-s="orders">Orders</span></div>
   <main id="main"><div class="msg">Loading…</div></main>
-  <footer><span id="hint">‹ swipe / tap ›</span><span id="pager"></span></footer>
+  <footer>
+    <div class="bar"><i id="prog"></i></div>
+    <div class="foot"><span>‹ swipe / tap ›</span><span id="pager"></span></div>
+  </footer>
 </div>
 
 <script>
 (function () {
-  var PER_PAGE = 6;
-  var REFRESH_MS = 10000;
+  var PER_PAGE = 4;
+  var REFRESH_MS = 30000;
   var mem = {};
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k) || mem[k]; localStorage.setItem(k, v); } catch (e) { if (v !== undefined) mem[k] = v; else return mem[k]; } }
 
@@ -60,11 +104,13 @@
   function money(n) { return (n < 0 ? '−' : '+') + '₹' + nf.format(Math.abs(n)); }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]; }); }
   function cls(n) { return n > 0 ? 'up' : n < 0 ? 'down' : 'dim'; }
+  function accent(n) { return n > 0 ? 'up-c' : n < 0 ? 'down-c' : 'flat-c'; }
   function statusCls(s) {
     if (s === 'complete' || s === 'completed') return 'up';
     if (s === 'rejected' || s === 'cancelled' || s === 'canceled') return 'down';
     return 'warn';
   }
+  function chunk(arr, n) { var out = []; for (var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n)); return out; }
 
   var data = null, pages = [], idx = 0, error = '';
 
@@ -74,56 +120,81 @@
     var open = data.positions.filter(function (p) { return p.open; });
     var closed = data.positions.filter(function (p) { return !p.open; });
 
-    pages.push({ title: 'Today', render: function () {
-      var openPnl = open.reduce(function (s, p) { return s + p.pnl; }, 0);
+    pages.push({ section: 'today', title: 'Today', render: function () {
       var pending = data.orders.filter(function (o) { return statusCls(o.status) === 'warn'; }).length;
-      return '<div class="big"><div class="label">Total P&amp;L</div>' +
-        '<div class="value ' + cls(data.totalPnl) + '">' + money(data.totalPnl) + '</div>' +
-        '<div class="sub">' + open.length + ' open · ' + closed.length + ' closed</div>' +
-        '<div class="sub">' + data.orders.length + ' orders · ' + pending + ' pending</div></div>';
+      var bg = data.totalPnl > 0 ? 'up-bg' : data.totalPnl < 0 ? 'down-bg' : '';
+      return '<div class="hero ' + bg + '"><div class="label">Total P&amp;L</div>' +
+        '<div class="value ' + cls(data.totalPnl) + '">' + money(data.totalPnl) + '</div></div>' +
+        '<div class="stats">' +
+        '<div class="stat"><div class="n">' + open.length + '</div><div class="t">Open positions</div></div>' +
+        '<div class="stat"><div class="n">' + closed.length + '</div><div class="t">Closed</div></div>' +
+        '<div class="stat"><div class="n">' + data.orders.length + '</div><div class="t">Orders</div></div>' +
+        '<div class="stat"><div class="n ' + (pending ? 'warn' : '') + '">' + pending + '</div><div class="t">Pending</div></div>' +
+        '</div>';
     }});
 
     var all = open.concat(closed);
     chunk(all, PER_PAGE).forEach(function (items, i, arr) {
-      pages.push({ title: 'Positions ' + (i + 1) + '/' + arr.length, render: function () {
+      pages.push({ section: 'positions', title: 'Positions' + (arr.length > 1 ? ' ' + (i + 1) + '/' + arr.length : ''), render: function () {
         return items.map(function (p) {
-          var side = p.qty > 0 ? 'BUY' : p.qty < 0 ? 'SELL' : 'FLAT';
+          var sideCls = p.qty > 0 ? 'buy' : p.qty < 0 ? 'sell' : 'flat';
+          var sideTxt = p.qty > 0 ? 'BUY' : p.qty < 0 ? 'SELL' : 'FLAT';
           var meta = p.open
-            ? side + ' ' + nf0.format(Math.abs(p.qty)) + ' · avg ' + nf.format(p.avg) + ' · LTP ' + nf.format(p.ltp)
-            : 'Closed · ' + esc(p.product || '');
-          return '<div class="row"><div class="l"><div class="sym">' + esc(p.symbol) + '</div><div class="meta">' + meta + '</div></div>' +
-            '<div class="r"><div class="pnl ' + cls(p.pnl) + '">' + money(p.pnl) + '</div></div></div>';
+            ? '<span class="chip ' + sideCls + '">' + sideTxt + '</span><span>' + nf0.format(Math.abs(p.qty)) + ' @ ' + nf.format(p.avg) + '</span><span>· ' + nf.format(p.ltp) + '</span>'
+            : '<span class="chip flat">CLOSED</span><span>' + esc(p.product || '') + '</span>';
+          var pct = '';
+          if (p.open && p.avg) {
+            var pc = ((p.ltp - p.avg) / p.avg) * 100 * (p.qty < 0 ? -1 : 1);
+            pct = '<div class="pct ' + cls(pc) + '">' + (pc >= 0 ? '+' : '−') + nf.format(Math.abs(pc)) + '%</div>';
+          }
+          return '<div class="card ' + accent(p.pnl) + '"><div class="l"><div class="sym">' + esc(p.symbol) + '</div><div class="meta">' + meta + '</div></div>' +
+            '<div class="r"><div class="pnl ' + cls(p.pnl) + '">' + money(p.pnl) + '</div>' + pct + '</div></div>';
         }).join('');
       }});
     });
-    if (!all.length) pages.push({ title: 'Positions', render: function () { return '<div class="msg">No positions today</div>'; } });
+    if (!all.length) pages.push({ section: 'positions', title: 'Positions', render: function () { return '<div class="msg">No positions today</div>'; } });
 
     chunk(data.orders, PER_PAGE).forEach(function (items, i, arr) {
-      pages.push({ title: 'Orders ' + (i + 1) + '/' + arr.length, render: function () {
+      pages.push({ section: 'orders', title: 'Orders' + (arr.length > 1 ? ' ' + (i + 1) + '/' + arr.length : ''), render: function () {
         return items.map(function (o) {
-          var priceTxt = o.avg ? 'avg ' + nf.format(o.avg) : (o.price ? '@ ' + nf.format(o.price) : String(o.type || 'MKT'));
-          var meta = esc(o.side) + ' ' + nf0.format(o.filled) + '/' + nf0.format(o.qty) + ' · ' + priceTxt + (o.time ? ' · ' + esc(String(o.time).slice(-8, -3)) : '');
-          return '<div class="row"><div class="l"><div class="sym">' + esc(o.symbol) + '</div><div class="meta">' + meta + '</div></div>' +
-            '<div class="r"><div class="tag ' + statusCls(o.status) + '">' + esc(o.status) + '</div></div></div>';
+          var sc = statusCls(o.status);
+          var sideCls = String(o.side).toUpperCase() === 'BUY' ? 'buy' : 'sell';
+          var priceTxt = o.avg ? nf.format(o.avg) : (o.price ? nf.format(o.price) : esc(o.type || 'MKT'));
+          var time = o.time ? '<span>· ' + esc(String(o.time).slice(-8, -3)) + '</span>' : '';
+          var meta = '<span class="chip ' + sideCls + '">' + esc(String(o.side).toUpperCase()) + '</span><span>' + nf0.format(o.filled) + '/' + nf0.format(o.qty) + ' @ ' + priceTxt + '</span>' + time;
+          return '<div class="card ' + (sc === 'up' ? 'up-c' : sc === 'down' ? 'down-c' : 'warn-c') + '"><div class="l"><div class="sym">' + esc(o.symbol) + '</div><div class="meta">' + meta + '</div></div>' +
+            '<div class="r"><span class="pill ' + sc + '">' + esc(o.status) + '</span></div></div>';
         }).join('');
       }});
     });
-    if (!data.orders.length) pages.push({ title: 'Orders', render: function () { return '<div class="msg">No orders today</div>'; } });
+    if (!data.orders.length) pages.push({ section: 'orders', title: 'Orders', render: function () { return '<div class="msg">No orders today</div>'; } });
   }
 
-  function chunk(arr, n) { var out = []; for (var i = 0; i < arr.length; i += n) out.push(arr.slice(i, i + n)); return out; }
+  function setTabs(section) {
+    var tabs = document.querySelectorAll('#tabs span');
+    for (var i = 0; i < tabs.length; i++) tabs[i].className = tabs[i].getAttribute('data-s') === section ? 'on' : '';
+  }
 
   function render() {
     var main = document.getElementById('main');
-    if (error && !data) { main.innerHTML = '<div class="msg down">' + esc(error) + '<br><span class="dim" style="font-size:20px">Tap to retry</span></div>'; return; }
+    var clock = document.getElementById('clock');
+    if (error && !data) {
+      main.innerHTML = '<div class="msg down">' + esc(error) + '<small>Tap to retry</small></div>';
+      clock.innerHTML = '<span class="stale">error</span>';
+      return;
+    }
     if (!pages.length) { main.innerHTML = '<div class="msg">Loading…</div>'; return; }
     if (idx >= pages.length) idx = pages.length - 1;
     var p = pages[idx];
-    document.getElementById('title').textContent = p.title;
-    main.innerHTML = p.render();
+    // re-trigger the fade-in animation
+    var fresh = main.cloneNode(false);
+    fresh.innerHTML = p.render();
+    main.parentNode.replaceChild(fresh, main);
+    setTabs(p.section);
     document.getElementById('pager').textContent = (idx + 1) + ' / ' + pages.length;
+    document.getElementById('prog').style.width = ((idx + 1) / pages.length * 100) + '%';
     var t = data && data.updated ? new Date(data.updated) : null;
-    document.getElementById('clock').innerHTML = error ? '<span class="warn">stale</span>' : (t ? t.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '');
+    clock.innerHTML = error ? '<span class="stale">stale</span>' : (t ? t.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' }) : '--:--');
   }
 
   function go(d) { if (!pages.length) { load(); return; } idx = (idx + d + pages.length) % pages.length; render(); }
