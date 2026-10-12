@@ -88,7 +88,7 @@
 <script>
 (function () {
   var PER_PAGE = 4;
-  var REFRESH_MS = 1000;
+  var REFRESH_MS = 30000;
   var mem = {};
   function store(k, v) { try { if (v === undefined) return localStorage.getItem(k) || mem[k]; localStorage.setItem(k, v); } catch (e) { if (v !== undefined) mem[k] = v; else return mem[k]; } }
 
